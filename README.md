@@ -99,7 +99,7 @@ This project is licensed under the MIT License. See LICENSE for details.
 📬 Contact
 
 👨‍💻 Developers:
-	•	Michael Dany – Software Development & API Design
+	•	Michael Danylchuk – Software Development & API Design
 	•	Christopher “Zac” Hatchett – Digital Logic & Hardware Design
 
 📧 Reach out via email for collaboration opportunities!
