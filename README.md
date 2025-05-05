@@ -1,105 +1,130 @@
-🥁 USB Powered Single Octave MIDI & QWERTY Keyboard 🎹
+🎹 QWERTY & MIDI Plug-and-Play Keyboard System
 
-🚀 An open-source MIDI & QWERTY keyboard framework with a plug-and-play driver, supporting dynamic device detection, USB-HID, and MIDI communication.
+Turn any computer into a full-blown musical instrument.
+This Senior Design project is a custom-built QWERTY + MIDI USB keyboard that supports polyphonic playback, live synthesizer control, and driver-level customization using the Raspberry Pi Pico.
 
-📜 Project Overview
+🔌 Just plug it in. Start typing. Hear music.
 
-This project is an open-source plug-and-play framework and driver for MIDI and QWERTY keyboards, allowing seamless integration of typing and musical input. Our goal is to develop a cross-platform system that enables automatic device recognition and configuration upon connection.
+⸻
 
-🎯 Key Features:
-	•	Dual Keyboard Support: Handles both MIDI and QWERTY keyboards.
-	•	Plug-and-Play: Automatic detection and configuration without manual setup.
-	•	USB-HID & MIDI Compatibility: Processes standard keyboard input and MIDI signals.
-	•	Mode Switching Logic: Enables smooth transitions between typing and musical input.
-	•	Cross-Platform API: Supports Mac, Windows, and Linux for key remapping and MIDI customization.
+🔧 Project Overview
 
-🛠️ Hardware Architecture
+Title: QWERTY & MIDI Plug-and-Play Keyboards with Driver Framework
+Team Members:
+	•	👨‍💻 Michael Danylchuk — Firmware, Audio Engine, macOS Synth GUI
+	•	🔩 Christopher “Zac” Hatchett — Hardware Design, PCB, GPIO Integration
+Platform: Raspberry Pi Pico (RP2040)
+Languages: C, Python (macOS), Assembly (USB descriptors)
 
-🎛️ Hardware Components
-	•	Microcontroller: Raspberry Pi Pico (RP2040) for prototyping.
-	•	Custom PCB Design: Supports USB-C, I²C, or SPI interfaces.
-	•	Keyboard Matrix & Input Handling: Efficiently scans and processes key presses.
+⸻
 
-🔌 Firmware & Driver Development
-	•	Dynamic Device Detection: Identifies MIDI or QWERTY mode automatically.
-	•	Low-Latency Processing: Optimized firmware for minimal input lag.
-	•	USB Communication: Implements HID for QWERTY input and MIDI for note processing.
+🚀 Features
 
-💻 Software & API
-	•	Device Configuration App: Allows users to remap keys and modify MIDI settings.
-	•	Firmware Updates: Supports future expansions such as Bluetooth MIDI integration.
-	•	Hot-Swapping: Detects device connections and updates configurations in real time.
+🎼 QWERTY + MIDI Keyboard Modes
+	•	QWERTY Mode: Sends typed characters like a normal USB keyboard.
+	•	MIDI Mode: Each key maps to a MIDI note.
+	•	Seamlessly switchable firmware with custom C driver code.
 
-🚀 Getting Started
+🔊 Real-Time Sound Engine
+	•	Pure Python synth with live playback via sounddevice.
+	•	Polyphonic: Hold and mix multiple keys at once.
+	•	Timeout-based sustain for natural release.
 
-🔧 Prerequisites
-	1.	Install Python 3.8+ and required libraries:
+🍎 macOS Menu Bar App
+	•	Lightweight menu extra using rumps.
+	•	Displays the live MIDI note and frequency.
+	•	Smooth status updates on currently played tones.
 
-pip install pyusb numpy hidapi
+🧠 Smart Engine Architecture
+	•	Modular threading: keyboard input, Pico MIDI, and GUI run concurrently.
+	•	Real-time updates from engine.py sync with the menu bar GUI.
+	•	MIDI listener automatically detects and connects to the Pico.
 
+⸻
 
-	2.	Install PlatformIO for firmware development:
+🛠️ Folder Structure
 
-pip install platformio
-
-
-	3.	Clone the repository:
-
-git clone https://github.com/your-repo/midi-qwerty-keyboard.git
-cd midi-qwerty-keyboard
-
-
-
-📦 Hardware Setup
-	•	Connect the MIDI/QWERTY keyboard to your computer via USB.
-	•	If using the Raspberry Pi Pico, flash the firmware using:
-
-pio run --target upload
-
-
-	•	Verify device detection using:
-
-lsusb
+├── midi_sound_engine/
+│   ├── engine.py              # Synthesizer engine
+│   ├── test_play.py           # QWERTY polling + MIDI support
+│   ├── monitor_and_launch.py  # Auto-launcher when Pico is plugged in
+│   ├── synth_menu.py          # macOS menu bar interface
+│   └── pico_listener.py       # Reads MIDI notes from Pico
+│
+├── qwerty_midi_pico/
+│   ├── drivers/               # Custom C driver for GPIO and key mapping
+│   ├── usb_descriptors.c/h    # MIDI class descriptors
+│   ├── tonegen.c              # Tone generator logic (for microcontroller test)
+│   └── main.c                 # Entry point for firmware
 
 
 
-🎼 Usage
-	1.	Plug in the keyboard – the driver automatically detects the device.
-	2.	Launch the configuration app to remap keys or adjust MIDI settings.
-	3.	Play or type seamlessly – switch between modes without manual intervention.
+⸻
 
-📌 Roadmap
-	•	Develop keyboard matrix scanning
-	•	Implement USB-HID & MIDI communication
-	•	Design and manufacture custom PCBs
-	•	Optimize driver performance
-	•	Release open-source API for customization
+💻 How It Works
 
-🤝 Contributing
+Step 1: Plug It In
 
-Want to contribute? Fork the repo and submit a pull request! 🚀
-	1.	Fork the repository on GitHub.
-	2.	Create a new branch for your feature:
+The Pico shows up as a USB MIDI device.
 
-git checkout -b feature-name
+Step 2: Autodetection
 
+The monitor_and_launch.py script detects the Pico and:
+	•	Starts the Python synth engine.
+	•	Launches the macOS menu bar GUI.
+	•	Begins listening for input from both your QWERTY and Pico.
 
-	3.	Commit your changes and push to your branch:
+Step 3: Start Typing
+	•	Press a–k to play notes.
+	•	Multiple keys can be held to create chords.
+	•	Menu bar updates in real-time with note + frequency.
 
-git commit -m "Added new feature"
-git push origin feature-name
+⸻
 
+📦 Dependencies
 
-	4.	Submit a pull request and describe your changes.
+Python (macOS Synth Engine):
 
-📜 License
+pip install sounddevice numpy rumps mido python-rtmidi keyboard
 
-This project is licensed under the MIT License. See LICENSE for details.
+C (Pico Firmware):
+	•	TinyUSB MIDI class
+	•	CMake toolchain
+	•	Tested with pico-sdk
 
-📬 Contact
+⸻
 
-👨‍💻 Developers:
-	•	Michael Danylchuk – Software Development & API Design
-	•	Christopher “Zac” Hatchett – Digital Logic & Hardware Design
+🎓 Educational Goals
 
-📧 Reach out via email for collaboration opportunities!
+This project teaches:
+	•	USB driver development
+	•	Real-time audio synthesis
+	•	Multi-threaded design
+	•	Embedded systems integration
+	•	Cross-platform MIDI support
+	•	GUI development for embedded interfaces
+
+⸻
+
+📽️ Demo
+
+Coming Soon: Full walkthrough video + live sound demo.
+
+⸻
+
+🧠 Future Improvements
+	•	🎛️ Add EQ, waveform shape selection
+	•	🎤 Input-based pitch detection
+	•	💻 Windows/Linux support for GUI
+	•	🧪 AI-based note prediction via ai_predict.py
+
+⸻
+
+🤝 Credits
+
+Created at San Jose State University (EE198A)
+Mentored by Dr. Nadir Mir
+
+⸻
+
+Let me know if you’d like a demo video badge, GIFs of usage, or a one-liner install script!

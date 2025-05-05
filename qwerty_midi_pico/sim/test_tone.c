@@ -69,8 +69,8 @@ for (int i = 0; i < NUM_NOTES; i++) {
     usleep(300000); // wait 300 ms for this note to ring out
 }
 
-AudioQueueStop(audioQueue, true);      // 🛑 Stop after all tones
-AudioQueueDispose(audioQueue, true);   // 🧼 Clean up
+    AudioQueueStop(audioQueue, true);      // 🛑 Stop after all tones
+    AudioQueueDispose(audioQueue, true);   // 🧼 Clean up
 
     AudioQueueDispose(audioQueue, true);
     return 0;
