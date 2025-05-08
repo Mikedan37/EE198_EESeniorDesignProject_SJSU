@@ -1,5 +1,12 @@
-#pragma once
-#include <stdint.h>   // <-- Make sure this is included
+#ifndef GPIO_DRIVER_H
+#define GPIO_DRIVER_H
 
-void gpio_init(void);
-int gpio_read(uint8_t pin);  // ✅ Fix this line
+#include "pico/stdlib.h"
+
+#define NUM_KEYS 5
+extern const uint gpio_key_pins[NUM_KEYS];
+
+void gpio_driver_init();
+int gpio_read(uint8_t pin);
+
+#endif

@@ -1,0 +1,5 @@
+/Users/mdanylchuk/EE198_EESeniorDesignProject_SJSU/qwerty_midi_pico/build/_deps/picotool/picotool
+/Users/mdanylchuk/EE198_EESeniorDesignProject_SJSU/qwerty_midi_pico/build/_deps/picotool/picotoolTargets.cmake
+/Users/mdanylchuk/EE198_EESeniorDesignProject_SJSU/qwerty_midi_pico/build/_deps/picotool/picotoolTargets-release.cmake
+/Users/mdanylchuk/EE198_EESeniorDesignProject_SJSU/qwerty_midi_pico/build/_deps/picotool/picotoolConfig.cmake
+/Users/mdanylchuk/EE198_EESeniorDesignProject_SJSU/qwerty_midi_pico/build/_deps/picotool/picotoolConfigVersion.cmake

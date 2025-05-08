@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 #define NUM_KEYS 4
 

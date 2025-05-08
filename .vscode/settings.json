@@ -13,6 +13,7 @@
         "vector": "cpp",
         "math.h": "c",
         "stdio.h": "c",
-        "gpio_driver.h": "c"
+        "gpio_driver.h": "c",
+        "time.h": "c"
     }
 }
