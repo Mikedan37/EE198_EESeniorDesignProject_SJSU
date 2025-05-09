@@ -127,4 +127,3 @@ Mentored by Dr. Nadir Mir
 
 ⸻
 
-Let me know if you’d like a demo video badge, GIFs of usage, or a one-liner install script!
