@@ -1,25 +1,20 @@
-import time
-import threading
-from pico_listener import midi_listener
-from test_play import start_keyboard_polling
-from synth_menu import SynthMenuBarApp
-from engine import shutdown
+# monitor_and_launch.py
 
-def launch_background_components():
-    print("🔌 Starting background threads...")
-    threading.Thread(target=midi_listener, daemon=True).start()
-    start_keyboard_polling()
+from unified_listener import launch_listeners  # ✅ New: single call to launch all
+from synth_menu import SynthMenuBarApp
+from engine import shutdown, start_audio_engine
 
 def main():
     try:
-        print("🔊 Starting audio engine...")
-        launch_background_components()
+        print("🔊 Starting audio engine (main thread)...")
+        start_audio_engine()  # ✅ Must be on main thread for sounddevice stability
 
-        print("🎧 Synth engine running (timeout-based key hold logic)")
+        print("🔌 Launching background listeners...")
+        launch_listeners()  # ✅ Serial, MIDI, QWERTY, etc.
+
         print("🚀 Launching menu bar...")
-
-        # ✅ Menu bar must run on the main thread
         SynthMenuBarApp().run()
+
     except KeyboardInterrupt:
         shutdown()
         print("🛑 Synth system shut down.")

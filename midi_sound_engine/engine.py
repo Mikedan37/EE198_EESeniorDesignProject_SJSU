@@ -11,7 +11,7 @@ TIMEOUT = 0.3  # seconds to hold before auto stop
 
 # 🎛️ Engine state
 lock = threading.Lock()
-playing = True
+playing = False
 held_notes = set()
 note_timestamps = {}
 phase_dict = {}
@@ -32,13 +32,13 @@ def play_note(note, velocity=100):
             phase_dict[note] = 0.0
         last_note = note
         last_freq = freq_from_midi(note)
-        print(f"[ENGINE] ▶️ {note} ({last_freq:.2f} Hz)")
+        print(f"[ENGINE] ▶️ Playing {note} ({last_freq:.2f} Hz)")
 
 def stop_note(note):
     with lock:
         if note in held_notes:
             held_notes.remove(note)
-            print(f"[ENGINE] ⏹️ Note {note} manually stopped")
+            print(f"[ENGINE] ⏹️ Stopped {note}")
 
 def get_last_note_info():
     with lock:
@@ -46,7 +46,7 @@ def get_last_note_info():
 
 def audio_callback(outdata, frames, time_info, status):
     if status:
-        print("⚠️ Audio callback:", status)
+        print("⚠️ Audio callback warning:", status)
 
     buffer = np.zeros(frames, dtype=np.float32)
     now = time.time()
@@ -55,7 +55,7 @@ def audio_callback(outdata, frames, time_info, status):
         for note in list(held_notes):
             if now - note_timestamps.get(note, 0) > TIMEOUT:
                 held_notes.remove(note)
-                print(f"[ENGINE] ⏹️ Auto stop: {note}")
+                print(f"[ENGINE] ⏹️ Auto-stop {note}")
                 continue
 
             freq = freq_from_midi(note)
@@ -71,23 +71,40 @@ def audio_callback(outdata, frames, time_info, status):
 
     outdata[:] = buffer.reshape(-1, 1)
 
-def audio_loop():
-    print("🔊 Starting audio engine...")
-    with sd.OutputStream(
-        samplerate=SAMPLE_RATE,
-        blocksize=BLOCK_SIZE,
-        channels=1,
-        dtype='float32',
-        callback=audio_callback
-    ):
-        while playing:
-            sd.sleep(100)
+def start_audio_engine():
+    global playing
+    if playing:
+        print("🎧 Engine already running.")
+        return
+    playing = True
+
+    print("🔊 Starting audio engine (main thread)...")
+    try:
+        devices = sd.query_devices()
+        for i, dev in enumerate(devices):
+            if "MacBook Pro" in dev['name'] and dev['max_output_channels'] > 0:
+                print(f"🔈 Using output device: {dev['name']} (index {i})")
+                sd.default.device = (None, i)
+                break
+        else:
+            print("⚠️ MacBook Pro speaker not found. Using default output.")
+    except Exception as e:
+        print(f"⚠️ Could not set output device: {e}")
+
+    def _audio_loop():
+        with sd.OutputStream(
+            samplerate=SAMPLE_RATE,
+            blocksize=BLOCK_SIZE,
+            channels=1,
+            dtype='float32',
+            callback=audio_callback
+        ):
+            while playing:
+                sd.sleep(100)
+
+    threading.Thread(target=_audio_loop, daemon=True).start()
 
 def shutdown():
     global playing
     playing = False
     print("🛑 Audio engine shutdown requested.")
-
-# 🚀 Launch audio thread when this module is imported
-threading.Thread(target=audio_loop, daemon=True).start()
-print("🎧 Synth engine running (timeout-based key hold logic)")
