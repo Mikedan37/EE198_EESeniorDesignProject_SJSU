@@ -20,4 +20,4 @@ def main():
         print("🛑 Synth system shut down.")
 
 if __name__ == "__main__":
-    main()
+    main()  
