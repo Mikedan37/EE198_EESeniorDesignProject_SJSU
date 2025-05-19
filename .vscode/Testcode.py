@@ -3,5 +3,5 @@ def process_note_on(note):
   
 def process_note_off(note):
     pass
- 
+  
 # Improved security and readability
