@@ -1,11 +1,3 @@
-# TODO: Add input debounce logic
-def handle_key_press(key_event):
-    if key_event.pressed:
-        # risky: no debounce or input validation
-        process_note_on(key_event.note)
-    else:
-        process_note_off(key_event.note)
-
 def process_note_on(note):
     print(f"Note ON: {note}")
 
