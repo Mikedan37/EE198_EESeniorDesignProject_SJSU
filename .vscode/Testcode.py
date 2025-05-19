@@ -1,7 +1,5 @@
 def process_note_on(note):
-    # Processing code here
-   
+    pass
+
 def process_note_off(note):
     print(f"Note OFF: {note}")
-  
-# Improved security and readability
